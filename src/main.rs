@@ -1,4 +1,6 @@
-use actix_web::{delete, web, get, post, put, App, HttpResponse, HttpServer, Responder};
+use actix_web::{
+    delete, get, middleware, post, put, web, App, HttpResponse, HttpServer, Responder,
+};
 use serde::{Deserialize, Serialize};
 
 #[get("/")]
@@ -44,6 +46,8 @@ struct User {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+            .wrap(middleware::Logger::default()) // Request logging middleware
+            .wrap(middleware::Compress::default()) // Response compression middleware
             .service(index)
             .service(create)
             .service(update)
